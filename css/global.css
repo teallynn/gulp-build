@@ -1096,7 +1096,7 @@ hr {
     float: left;
     line-height: 1;
     font-size: 2.4rem;
-    color: #fff; }
+    color: teal; }
     .circle--header h1 a, .circle--header h2 a, .circle--header h3 a, .circle--header h4 a, .circle--header h5 a, .circle--header h6 a {
       color: white; }
       .circle--header h1 a:hover, .circle--header h2 a:hover, .circle--header h3 a:hover, .circle--header h4 a:hover, .circle--header h5 a:hover, .circle--header h6 a:hover {

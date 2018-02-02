@@ -8,7 +8,10 @@ cleanCSS = require('gulp-clean-css'),
   rename = require('gulp-rename'),
     sass = require('gulp-sass'),
     maps = require('gulp-sourcemaps'),
-     del = require('del');
+imagemin = require('gulp-imagemin'),
+     del = require('del'),
+sequence = require('run-sequence'),
+browserSync = require('browser-sync').create();
 
 
 /***************Scripts - JS*********************/
@@ -30,13 +33,15 @@ gulp.task('scripts', ['concatScripts'], function() {
         .pipe(gulp.dest('dist/scripts'));
 });
 
+
 /***************Styles - CSS***********************/
 gulp.task('compileSass', function() {
   return gulp.src('sass/global.scss')
         .pipe(maps.init())
         .pipe(sass())
         .pipe(maps.write('./'))
-        .pipe(gulp.dest('css'));
+        .pipe(gulp.dest('css'))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('styles', ['compileSass'], function() {
@@ -48,31 +53,32 @@ gulp.task('styles', ['compileSass'], function() {
 
 
 /*******************Images*************************/
-
+gulp.task('images', function() {
+  return gulp.src('images/*')
+        .pipe(imagemin())
+        .pipe(gulp.dest('dist/content'));
+});
 
 
 /********************Clean*************************/
 gulp.task('clean', function() {
-  del(['dist', 'all*.js*', 'all*.css*']);
+  del(['dist', 'css', 'all*.js*', 'all*.css*']);
 });
 
 
 /********************Watch*************************/
 gulp.task('watchFiles', function() {
-  gulp.watch('sass/**/*.scss', ['compileSass']);
-  gulp.watch(['js/global.js', 'js/circle/*'], ['concatScripts']);
+  browserSync.init({server: './'});
+  gulp.watch(['sass/**/**/*.scss', 'sass/**/**/*.sass'], ['styles']).on('change', browserSync.reload);
+});
+
+/*********************Build************************/
+gulp.task('build', function() {
+  sequence('clean', ['scripts', 'styles', 'images']);
 });
 
 
-/***********************Serve***********************/
-gulp.task('serve', ['watchFiles']);
-
-
-/*********************Build************************/
-gulp.task('build', ['scripts', 'styles'])
-
-
 /********************Default***********************/
-gulp.task("default", ["clean"], function() {
-  gulp.start('build');
+gulp.task("default", function() {
+  gulp.start(['build', 'watchFiles'])
 });
