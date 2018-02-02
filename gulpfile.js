@@ -14,7 +14,7 @@ sequence = require('run-sequence'),
 browserSync = require('browser-sync').create();
 
 
-/**********gulp scripts - concatenate and minify JS***********/
+/*gulp scripts - concatenate and minify JS and save to the dist/scripts folder*/
 gulp.task('concatScripts', function () {
   return gulp.src([
         'js/global.js',
@@ -34,7 +34,7 @@ gulp.task('scripts', ['concatScripts'], function() {
 });
 
 
-/*******gulp styles - compile scss to css and minify*********/
+/*gulp styles - compile scss to css and save to a css folder, then minify and save to the dist/styles folder*/
 gulp.task('compileSass', function() {
   return gulp.src('sass/global.scss')
         .pipe(maps.init())
@@ -52,7 +52,7 @@ gulp.task('styles', ['compileSass'], function() {
 });
 
 
-/***********gulp images - minify images*************************/
+/***gulp images - minify imagesand save to the dist/content folder*********/
 gulp.task('images', function() {
   return gulp.src('images/*')
         .pipe(imagemin())
@@ -60,7 +60,7 @@ gulp.task('images', function() {
 });
 
 
-/*********gulp clean - deletes files create dby gulp*********/
+/*********gulp clean - deletes files created by gulp*********/
 gulp.task('clean', function() {
   del(['dist', 'css', 'all*.js*', 'all*.css*']);
 });
