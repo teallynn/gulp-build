@@ -14,7 +14,7 @@ sequence = require('run-sequence'),
 browserSync = require('browser-sync').create();
 
 
-/***************Scripts - JS*********************/
+/**********gulp scripts - concatenate and minify JS***********/
 gulp.task('concatScripts', function () {
   return gulp.src([
         'js/global.js',
@@ -34,7 +34,7 @@ gulp.task('scripts', ['concatScripts'], function() {
 });
 
 
-/***************Styles - CSS***********************/
+/*******gulp styles - compile scss to css and minify*********/
 gulp.task('compileSass', function() {
   return gulp.src('sass/global.scss')
         .pipe(maps.init())
@@ -52,7 +52,7 @@ gulp.task('styles', ['compileSass'], function() {
 });
 
 
-/*******************Images*************************/
+/***********gulp images - minify images*************************/
 gulp.task('images', function() {
   return gulp.src('images/*')
         .pipe(imagemin())
@@ -60,25 +60,25 @@ gulp.task('images', function() {
 });
 
 
-/********************Clean*************************/
+/*********gulp clean - deletes files create dby gulp*********/
 gulp.task('clean', function() {
   del(['dist', 'css', 'all*.js*', 'all*.css*']);
 });
 
 
-/********************Watch*************************/
+/*gulp watchFiles - watches for changes in .scss, .sass files and reloads browser*/
 gulp.task('watchFiles', function() {
   browserSync.init({server: './'});
   gulp.watch(['sass/**/**/*.scss', 'sass/**/**/*.sass'], ['styles']).on('change', browserSync.reload);
 });
 
-/*********************Build************************/
+/*gulp build - runs gulp clean first, then scripts, styles and images simultaneously*/
 gulp.task('build', function() {
   sequence('clean', ['scripts', 'styles', 'images']);
 });
 
 
-/********************Default***********************/
+/************Default gulp command - runs build and watchFiles*********/
 gulp.task("default", function() {
   gulp.start(['build', 'watchFiles'])
 });
